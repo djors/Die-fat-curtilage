@@ -12,8 +12,8 @@ import java.io.InputStream;
 public class ExcuteMethod {
 
     public static void main(String[] args) {
-//        File localStarFile = new File("C:\\Users\\Asura\\Desktop\\测试环境搭建\\数据库\\ssz_user_indexes.xlsx");
-        File localStarFile = new File("C:\\Users\\Asura\\Desktop\\亚太财险2020-2021年度商业险及水险合作公估机构.xlsx");
+        String pathName = "C:\\Users\\Asura\\Desktop\\亚太财险2020-2021年度商业险及水险合作公估机构.xlsx";
+        File localStarFile = new File(pathName);
         try {
 //            UpLoadDataListener listener = new UpLoadDataListener();
             CompareDataListener  listener = new CompareDataListener();

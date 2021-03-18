@@ -4,25 +4,39 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.fat.curtilage.excel.dto.DataInsert;
 import com.fat.curtilage.excel.dto.DataInsert1;
-import com.fat.curtilage.excel.listener.utils.AgencyCodeGenerate;
+import com.fat.curtilage.excel.listener.analysis.ReadForInsert;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 public class CompareDataListener extends AnalysisEventListener<DataInsert1> {
-    StringBuilder builder = new StringBuilder();
+    private StringBuilder builder = new StringBuilder();
+    private long startPoint;
+    private long endPoint;
     @Override
     public void invoke(DataInsert1 data, AnalysisContext context) {
-        if (data.getNumber()==1700) {
-            System.out.println("<=========================>执行开始！");
-        }
-        builder.append("insert into API_CNXCLMBUSI.PRPDAGENCYDIRECTORY (ID, AGENCYCODE, AGENCYTYPE, AGENCYNAME, MAKECOMADDRESS, CERTIFICATELEVEL, AGENTTYPE, BUSINESSTYPE, CHARGEFLAG, WORKCODE, WORKNAME, CONTACTNAME, AGENCYSCOPETYPE, PHONENUMBER, MOBILENUMBER, FAXNUMBER, ADDRESS, POSTCODE, EMAIL, STATUS, SOURCEFLAG, FLAG, REMARK, WORKCLASSCODE, WORKADDRESS, INSERTTIMEFORHIS, OPERATETIMEFORHIS, PARTITIONKEY, BIRTHDAY, GENDER, OLDAGENCYNAME, TECTITLE, PROBACK, CONTACT) values ("+data.getNumber()+", '"+ AgencyCodeGenerate.AgencyCode(String.valueOf(data.getNumber()),"G") +"', 'G', '"+data.getCompanyName()+"', null, '07', null, null, '0', null, null, '"+data.getLink() +"', null, '"+data.getPhone()+"', '"+data.getPhone()+"', null, '"+data.getAddress()+"', null, null, '1', null, null, null, '01,02,04,07,09,12,13,06,99,19', '000000', sysdate, sysdate, sysdate, null, null, null, null, null, null);\n");
+        //2020-03-17
+        ReadForInsert.Insert1(data,builder);
   }
+
+    @Override
+    public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+        super.invokeHeadMap(headMap, context);
+        System.out.println("解析到一条头数据："+headMap.toString());
+        System.out.println("<=========================>执行开始！");
+        //执行开始计时
+        startPoint = System.currentTimeMillis();
+    }
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
         String text = builder.toString();
+        if (!StringUtils.hasText(text)){
+            return;
+        }
         boolean flag = false;
         File outFile = new File("C:\\Users\\Asura\\Desktop\\字典核对\\2021-03-17-公估机构数据导入.txt");
         try {
@@ -36,6 +50,8 @@ public class CompareDataListener extends AnalysisEventListener<DataInsert1> {
             System.out.println("输出到本地文件异常！");
             e.printStackTrace();
         }
+        endPoint = System.currentTimeMillis();
         System.out.println("<=========================>执行结束！");
+        System.out.println("读取持续时长："+(endPoint-startPoint));
     }
 }
