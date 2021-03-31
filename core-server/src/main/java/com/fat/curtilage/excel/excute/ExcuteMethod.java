@@ -1,9 +1,8 @@
 package com.fat.curtilage.excel.excute;
 
 import com.alibaba.excel.EasyExcel;
-import com.fat.curtilage.excel.dto.DataInsert;
 import com.fat.curtilage.excel.dto.DataInsert1;
-import com.fat.curtilage.excel.listener.CompareDataListener;
+import com.fat.curtilage.excel.listener.GenerateInsertListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +15,7 @@ public class ExcuteMethod {
         File localStarFile = new File(pathName);
         try {
 //            UpLoadDataListener listener = new UpLoadDataListener();
-            CompareDataListener  listener = new CompareDataListener();
+            GenerateInsertListener listener = new GenerateInsertListener();
             InputStream inputStream = new FileInputStream(localStarFile);
             EasyExcel.read(inputStream, DataInsert1.class, listener).sheet().doRead();
         }catch (Exception e){

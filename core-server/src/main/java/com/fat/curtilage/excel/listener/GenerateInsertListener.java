@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
 
-public class CompareDataListener extends AnalysisEventListener<DataInsert1> {
+public class GenerateInsertListener extends AnalysisEventListener<DataInsert1> {
     private StringBuilder builder = new StringBuilder();
     private long startPoint;
     private long endPoint;
